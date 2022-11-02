@@ -7,7 +7,7 @@ if [ "$1" = "run_django" ]; then
 fi
 
 if [ "$1" = 'run_bot' ]; then
-  python manage.py filldb
+#  python manage.py filldb
   python manage.py migrate
   exec python manage.py main
 fi
