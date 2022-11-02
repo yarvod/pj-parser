@@ -1,0 +1,88 @@
+version: '3.8'
+
+volumes:
+  postgres_data:
+  static:
+  redis:
+  media:
+
+services:
+  postgres:
+    container_name: pj-parser-postgres
+    image: ghcr.io/yarvod/pj-parser/pj-parser-postgres:latest
+    build:
+      context: ./postgres
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    restart: always
+    
+  redis:
+    image: ghcr.io/yarvod/pj-parser/pj-parser-redis:latest
+    container_name: pj-parser-redis
+    build:
+      context: ./redis
+    env_file:
+      - .env
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
+    restart: always
+
+  backend:
+    image: ghcr.io/yarvod/pj-parser/pj-parser-backend:latest
+    build:
+      context: ./backend
+    container_name: pj-parser-backend
+    env_file:
+      - .env
+    volumes:
+      - ./backend/:/app/
+      - static:/app/static
+      - media:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres_db
+      - redis
+    command: ["./wait-for-postgres.sh", "--", "sh", "entrypoint.sh", "run_django"]
+
+  celery:
+    image: ghcr.io/yarvod/pj-parser/pj-parser-backend:latest
+    build:
+      context: ./backend
+    container_name: pj-parser-celery
+    volumes:
+      - ./backend/:/app/
+    depends_on:
+      - postgres
+      - redis
+      - backend
+    env_file:
+      - .env
+    restart: always
+    command: ["./wait-for-postgres.sh", "--", "sh", "entrypoint.sh", "run_celery"]
+
+  nginx:
+    image: ghcr.io/yarvod/pj-parser/pj-parser-nginx:latest
+    container_name: pj-parser-nginx
+    restart: unless-stopped
+    env_file:
+      - .env
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - static:/static
+      - media:/media
+      - ${SSL_CERTIFICATE}:/etc/nginx/certs/cert.pem:ro
+      - ${SSL_CERTIFICATE_KEY}:/etc/nginx/certs/key.pem:ro
+
+    depends_on:
+      - backend
