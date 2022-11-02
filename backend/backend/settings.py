@@ -7,6 +7,9 @@ from django.core.management.utils import get_random_secret_key
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
+TOKEN = os.getenv('TOKEN')
+API_ID = os.getenv('API_ID')
+API_HASH = os.getenv('API_HASH')
 
 DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
 
@@ -25,12 +28,12 @@ INSTALLED_APPS = [
 
     'psycopg2',
     'corsheaders',
-    'drf_yasg',
     'rest_framework',
     'django_extensions',
-    'django_filters',
     'ckeditor',
-    'storages',
+
+    'posts',
+    'bot',
 ]
 
 MIDDLEWARE = [
@@ -117,6 +120,18 @@ TEST_CACHES = {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
+
+# Celery
+
+CELERY_BROKER_URL = 'redis://:{}@{}:{}/2'.format(
+    REDIS_PASS,
+    REDIS_HOST,
+    REDIS_PORT
+)
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 
 AUTH_PASSWORD_VALIDATORS = [

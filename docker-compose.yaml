@@ -47,9 +47,23 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - postgres_db
+      - postgres
       - redis
     command: ["./wait-for-postgres.sh", "--", "sh", "entrypoint.sh", "run_django"]
+
+  bot:
+    image: ghcr.io/yarvod/pj-parser/pj-parser-backend:latest
+    build:
+      context: ./backend
+    container_name: pj-parser-bot
+    env_file:
+      - .env
+    volumes:
+      - ./backend/:/app/
+    depends_on:
+      - postgres
+      - redis
+    command: [ "./wait-for-postgres.sh", "--", "sh", "entrypoint.sh", "run_bot" ]
 
   celery:
     image: ghcr.io/yarvod/pj-parser/pj-parser-backend:latest
