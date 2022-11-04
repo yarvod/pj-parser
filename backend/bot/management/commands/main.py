@@ -16,7 +16,7 @@ def main() -> None:
     api_id = settings.API_ID
     api_hash = settings.API_HASH
     client = TelegramClient('session_name', api_id, api_hash)
-    client.start(bot_token=settings.TOKEN)
+    client.start()
 
     @client.on(events.NewMessage(chats=list(Channel.objects.filter(is_active=True).values_list('username', flat=True))))
     async def newMessageListener(event):

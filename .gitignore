@@ -5,4 +5,4 @@
 *.log
 *.session*
 
-*test_bot.py
+backend/test_bot.py
