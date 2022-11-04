@@ -67,7 +67,7 @@ jobs:
         id: backend_rebuild
         name: Backend -- build and push
         run: |
-          docker build backend_app/ -t ghcr.io/yarvod/pj-parser/pj-parser-backend:latest
+          docker build backend/ -t ghcr.io/yarvod/pj-parser/pj-parser-backend:latest
           docker push ghcr.io/yarvod/pj-parser/pj-parser-backend:latest
           echo "backend_rebuilt=true" >> $GITHUB_OUTPUT
 
@@ -126,7 +126,7 @@ jobs:
 #        run: echo ${{ secrets.GITHUB }} | docker login ghcr.io -u yarvod --password-stdin
 #      - if: needs.build.outputs.backend_rebuilt == 'true'
 #        name: Run compose
-#        run: docker-compose up -d backend_app redis postgres_db
+#        run: docker-compose up -d backend redis postgres
 #      - if: needs.build.outputs.backend_rebuilt == 'true'
 #        name: Test backend
 #        run: docker exec pj-parser-backend-app python manage.py test
