@@ -61,6 +61,7 @@ services:
     volumes:
       - ./backend/:/app/
     depends_on:
+      - backend
       - postgres
       - redis
     command: [ "./wait-for-postgres.sh", "--", "sh", "entrypoint.sh", "run_bot" ]

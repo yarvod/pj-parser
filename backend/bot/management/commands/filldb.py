@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.management import BaseCommand
 
 from posts.models import Channel
@@ -5,8 +6,8 @@ from posts.models import Channel
 
 def filldb():
     Channel.objects.update_or_create(
-        username='test_phystechjob_parser',
-        defaults=dict(name='test_phystechjob_parser', link='https://t.me/test_phystechjob_parser')
+        username=settings.CHANNEL,
+        defaults=dict(name=settings.CHANNEL, link=f'https://t.me/{settings.CHANNEL}', is_active=True)
     )
 
 

@@ -10,6 +10,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 TOKEN = os.getenv('TOKEN')
 API_ID = os.getenv('API_ID')
 API_HASH = os.getenv('API_HASH')
+CHANNEL = os.getenv('CHANNEL')
 
 DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
 

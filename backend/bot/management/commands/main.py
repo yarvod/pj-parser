@@ -16,10 +16,10 @@ def main() -> None:
     api_id = settings.API_ID
     api_hash = settings.API_HASH
     client = TelegramClient('session_name', api_id, api_hash)
-    client.start()
+    client.start(bot_token=settings.TOKEN)
 
     @client.on(events.NewMessage(chats=list(Channel.objects.filter(is_active=True).values_list('username', flat=True))))
-    def newMessageListener(event):
+    async def newMessageListener(event):
         logger.info(f"Recieved from {event.chat.username} message {event.message.message}")
         tasks.process_message.apply_async(kwargs=dict(
             channel_username=event.chat.username,

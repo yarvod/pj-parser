@@ -4,3 +4,5 @@
 *.idea
 *.log
 *.session*
+
+*test_bot.py
