@@ -17,7 +17,7 @@ jobs:
       redis: ${{ steps.check_files.outputs.redis }}
       postgres: ${{ steps.check_files.outputs.postgres }}
     environment:
-      name: pj-parser-env
+      name: pj-parser
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -54,7 +54,7 @@ jobs:
     outputs:
       backend_rebuilt: ${{ steps.backend_rebuild.outputs.backend_rebuilt }}
     environment:
-      name: pj-parser-env
+      name: pj-parser
     steps:
       - name: Chekout Repository
         uses: actions/checkout@v3
@@ -86,14 +86,14 @@ jobs:
       - if: needs.check.outputs.postgres == 'true'
         name: Postgres -- build and push
         run: |
-          docker build postgres_db/ -t ghcr.io/yarvod/pj-parser/pj-parser-postgres-db:latest
-          docker push ghcr.io/yarvod/pj-parser/pj-parser-postgres-db:latest
+          docker build postgres/ -t ghcr.io/yarvod/pj-parser/pj-parser-postgres:latest
+          docker push ghcr.io/yarvod/pj-parser/pj-parser-postgres:latest
 
 #  test:
 #    runs-on: ubuntu-latest
 #    needs: build
 #    environment:
-#      name: pj-parser-env
+#      name: pj-parser
 #    steps:
 #      - name: Chekout Repository
 #        uses: actions/checkout@v3
@@ -135,7 +135,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: pj-parser-env
+      name: pj-parser
     steps:
       - name: Chekout Repository
         uses: actions/checkout@v3
