@@ -1,14 +1,29 @@
 from ckeditor.fields import RichTextField
 from django.db import models
 
+from posts.constants import MessageEntityTypes
+
 
 class RawPost(models.Model):
-    channel = models.ForeignKey('bot.Channel', on_delete=models.CASCADE)
+    channel = models.ForeignKey('bot.Channel', on_delete=models.CASCADE, verbose_name='Канал')
     text = models.TextField(verbose_name='Текст публикации', blank=True)
 
     class Meta:
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
+
+
+class MessageEntity(models.Model):
+    post = models.ForeignKey(to='RawPost', verbose_name='Пост', on_delete=models.CASCADE)
+    text = models.TextField(verbose_name='Текст', blank=True)
+    type = models.CharField(choices=MessageEntityTypes.CHOICES, max_length=20, blank=True)
+    offset = models.SmallIntegerField(verbose_name='Офсет', null=True)
+    length = models.SmallIntegerField(verbose_name='Длинна', null=True)
+    url = models.URLField(verbose_name='Ссылка', blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Message Entity'
+        verbose_name_plural = 'Message Entities'
 
 
 class Vacancy(models.Model):
