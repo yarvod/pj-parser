@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.management import BaseCommand
 
-from posts.models import Channel
+from bot.models import Channel
 
 
 def filldb():

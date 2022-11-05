@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from bot.models import Channel
+
+
+@admin.register(Channel)
+class ChannelAdmin(admin.ModelAdmin):
+    list_display = ('name', 'username', 'link')

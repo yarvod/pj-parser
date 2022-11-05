@@ -5,4 +5,12 @@
 *.log
 *.session*
 
-backend/test_bot.py
+*/static
+*/media
+
+*.DS_Store
+*/dist
+*__pycache__
+*.py[cod]
+*$py.class
+*.pyc

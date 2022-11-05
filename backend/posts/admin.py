@@ -1,12 +1,7 @@
 from django.contrib import admin
 from django.template.defaultfilters import truncatechars
 
-from posts.models import RawPost, Channel, Vacancy
-
-
-@admin.register(Channel)
-class ChannelAdmin(admin.ModelAdmin):
-    list_display = ('name', 'username', 'link')
+from posts.models import RawPost, Vacancy
 
 
 @admin.register(RawPost)

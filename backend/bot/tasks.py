@@ -1,7 +1,8 @@
 import logging
 
 from backend.celery import app
-from posts.models import RawPost, Channel
+from bot.models import Channel
+from posts.models import RawPost
 
 logger = logging.getLogger(__name__)
 
