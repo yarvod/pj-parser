@@ -10,11 +10,11 @@ logger = logging.getLogger(__name__)
 @app.task
 def process_message(channel_username: str, message: dict):
     logger.info("Start process message")
-    try:
-        channel = Channel.objects.get(username=channel_username)
-    except Channel.DoesNotExist:
-        logger.error(f"Channel {channel_username} NOT FOUND")
+    active_chats = list(Channel.objects.filter(is_active=True).values_list('username', flat=True))
+    if channel_username not in active_chats:
+        logger.warning(f"chat {channel_username} is NOT IN ACTIVE LIST")
         return
+    channel = Channel.objects.get(username=channel_username)
     raw_post = RawPost.objects.create(channel=channel, text=message.get('message'))
     for entity in message.get('entities'):
         MessageEntity.objects.create(

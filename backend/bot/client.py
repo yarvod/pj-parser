@@ -1,5 +1,5 @@
 from django.conf import settings
-from telethon.sync import TelegramClient
+from telethon import TelegramClient
 
 
 def get_client():

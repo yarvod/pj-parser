@@ -1,6 +1,8 @@
+import asyncio
 import logging
 
-from telethon.sync import events
+from rest_framework.exceptions import ValidationError
+from telethon import events
 from django.core.management import BaseCommand
 
 from bot import tasks
@@ -14,13 +16,16 @@ logger = logging.getLogger(__name__)
 def main() -> None:
     client.start()
 
-    @client.on(events.NewMessage(chats=list(Channel.objects.filter(is_active=True).values_list('username', flat=True))))
+    @client.on(events.NewMessage())
     async def newMessageListener(event):
-        logger.info(f"Recieved from {event.chat.username} message {event.message.message}")
-        tasks.process_message.apply_async(kwargs=dict(
-            channel_username=event.chat.username,
-            message=MessageRawSeralizer(event.message).data,
-        ))
+        if hasattr(event.chat, 'username'):
+            logger.info(f"Recieved from {event.chat.username} message {event.message.message}")
+            tasks.process_message.apply_async(kwargs=dict(
+                channel_username=event.chat.username,
+                message=MessageRawSeralizer(event.message).data,
+            ))
+        else:
+            logger.info(f"Received message NOT from channel/chat")
 
     with client:
         client.run_until_disconnected()
