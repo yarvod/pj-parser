@@ -10,6 +10,7 @@ class MessageEntityTypes:
     PHONE = 'phone'
     MENTION_NAME = 'mention_name'
     MENTION = 'mention'
+    HASHTAG = 'hashtag'
 
     CHOICES = (
         (URL, 'URL'),
@@ -20,7 +21,8 @@ class MessageEntityTypes:
         (EMAIL, 'Email'),
         (PHONE, 'Phone'),
         (MENTION_NAME, 'Mention Name'),
-        (MENTION, 'Mention')
+        (MENTION, 'Mention'),
+        (HASHTAG, 'Hashtag'),
     )
 
     MAP_CLASSES = dict((
@@ -33,5 +35,6 @@ class MessageEntityTypes:
         ('MessageEntityPhone', PHONE),
         ('MessageEntityMentionName', MENTION_NAME),
         ('MessageEntityMention', MENTION),
+        ('MessageEntityHashtag', HASHTAG),
     ))
     
