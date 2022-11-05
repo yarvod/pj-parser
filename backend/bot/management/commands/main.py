@@ -21,7 +21,6 @@ def main() -> None:
             channel_username=event.chat.username,
             message=MessageRawSeralizer(event.message).data,
         ))
-        logger.info(f"serialized {MessageRawSeralizer(event.message).data}")
 
     with client:
         client.run_until_disconnected()
