@@ -13,6 +13,7 @@ class MessageEntityInline(admin.StackedInline):
 class RawPostAdmin(admin.ModelAdmin):
     list_display = ('id', 'short_text', 'channel',)
     list_filter = ('channel',)
+    search_fields = ('text',)
     inlines = (MessageEntityInline,)
 
     def short_text(self, obj):

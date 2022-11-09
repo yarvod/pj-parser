@@ -1,13 +1,10 @@
-import asyncio
 import logging
 
-from rest_framework.exceptions import ValidationError
 from telethon import events
 from django.core.management import BaseCommand
 
 from bot import tasks
 from bot.client import client
-from bot.models import Channel
 from posts.serializers import MessageRawSeralizer
 
 logger = logging.getLogger(__name__)
