@@ -1,5 +1,6 @@
 from ckeditor.fields import RichTextField
 from django.db import models
+from django.utils.timezone import now
 
 from posts.constants import MessageEntityTypes
 
@@ -7,6 +8,7 @@ from posts.constants import MessageEntityTypes
 class RawPost(models.Model):
     channel = models.ForeignKey('bot.Channel', on_delete=models.CASCADE, verbose_name='Канал')
     text = models.TextField(verbose_name='Текст публикации', blank=True)
+    created = models.DateTimeField(default=now(), verbose_name='Дата создания')
 
     class Meta:
         verbose_name = 'Пост'
@@ -16,7 +18,7 @@ class RawPost(models.Model):
 class MessageEntity(models.Model):
     post = models.ForeignKey(to='RawPost', verbose_name='Пост', on_delete=models.CASCADE)
     text = models.TextField(verbose_name='Текст', blank=True)
-    type = models.CharField(choices=MessageEntityTypes.CHOICES, max_length=20, blank=True)
+    type = models.CharField(choices=MessageEntityTypes.CHOICES, max_length=20, blank=True, verbose_name='Тип')
     offset = models.SmallIntegerField(verbose_name='Офсет', null=True)
     length = models.SmallIntegerField(verbose_name='Длинна', null=True)
     url = models.URLField(verbose_name='Ссылка', blank=True, null=True)
