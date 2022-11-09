@@ -8,7 +8,7 @@ from posts.constants import MessageEntityTypes
 class RawPost(models.Model):
     channel = models.ForeignKey('bot.Channel', on_delete=models.CASCADE, verbose_name='Канал')
     text = models.TextField(verbose_name='Текст публикации', blank=True)
-    created = models.DateTimeField(default=now(), verbose_name='Дата создания')
+    created = models.DateTimeField(default=now, verbose_name='Дата создания')
 
     class Meta:
         verbose_name = 'Пост'
