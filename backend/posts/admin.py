@@ -11,7 +11,7 @@ class MessageEntityInline(admin.StackedInline):
 
 @admin.register(RawPost)
 class RawPostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'short_text', 'channel',)
+    list_display = ('id', 'short_text', 'channel', 'created')
     list_filter = ('channel',)
     search_fields = ('text',)
     inlines = (MessageEntityInline,)
