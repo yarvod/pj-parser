@@ -3,7 +3,7 @@ import logging
 from backend.celery import app
 from bot.models import Channel
 from posts.constants import MessageEntityTypes
-from posts.models import RawPost, MessageEntity
+from posts.models import RawPost, MessageEntity, News
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +33,10 @@ def process_message(channel_username: str, message: dict):
             offset=entity['entity']['offset'],
             length=entity['entity']['length'],
             url=entity['entity']['url']
+        )
+    if channel_username == 'fpmi_career':  # FIXME: потом нужно умнее определять новости
+        News.objects.create(
+            text=raw_post.text
         )
     # process raw_post
     # vacancy = some_nlp_funcion(raw_post.text)

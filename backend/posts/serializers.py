@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from posts.constants import MessageEntityTypes
+from posts.models import News
 
 
 class EntityRawSerializer(serializers.Serializer):
@@ -35,3 +36,10 @@ class MessageRawSeralizer(serializers.Serializer):
     def get_entities(obj):
         entities = obj.get_entities_text()
         return MessageEntityRawSerializer(entities, many=True).data
+
+
+class NewsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = News
+        fields = ('text', 'date')

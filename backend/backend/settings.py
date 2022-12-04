@@ -249,3 +249,8 @@ CKEDITOR_CONFIGS = {
         ]
     }
 }
+
+
+NEWS_URL = os.getenv('NEWS_URL')
+PHYSTECHJOB_USER = os.getenv('PHYSTECHJOB_USER')
+PHYSTECHJOB_PWD = os.getenv('PHYSTECHJOB_PWD')
