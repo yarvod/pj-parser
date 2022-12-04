@@ -35,9 +35,11 @@ def process_message(channel_username: str, message: dict):
             url=entity['entity']['url']
         )
     if channel_username == 'fpmi_career':  # FIXME: потом нужно умнее определять новости
-        News.objects.create(
-            text=raw_post.text
+        news = News.objects.create(
+            text=raw_post.text,
+            is_active=True,
         )
+        news.publish()
     # process raw_post
     # vacancy = some_nlp_funcion(raw_post.text)
     # Vacancy.objects.create(**vacancy)

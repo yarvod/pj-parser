@@ -1,10 +1,7 @@
-import requests
-from django.conf import settings
 from django.contrib import admin
 from django.template.defaultfilters import truncatechars
 
 from posts.models import RawPost, Vacancy, MessageEntity, News
-from posts.serializers import NewsSerializer
 
 
 class MessageEntityInline(admin.StackedInline):
@@ -58,9 +55,4 @@ class NewsAdmin(admin.ModelAdmin):
     @admin.action(description='Опубликовать')
     def publish(self, request, queryset):
         for post in queryset:
-            data = NewsSerializer(post).data
-            requests.post(
-                url=settings.NEWS_URL,
-                auth=(settings.PHYSTECHJOB_USER, settings.PHYSTECHJOB_PWD),
-                json=data
-            )
+            post.publish()

@@ -1,7 +1,10 @@
+import requests
 from ckeditor.fields import RichTextField
+from django.conf import settings
 from django.db import models
 from django.template.defaultfilters import truncatechars
 from django.utils.timezone import now
+from rest_framework import serializers
 
 from posts.constants import MessageEntityTypes
 
@@ -78,3 +81,19 @@ class News(models.Model):
 
     def __str__(self):
         return truncatechars(self.text, 35)
+
+    def publish(self):
+        data = NewsSerializer(self).data
+        resp = requests.post(
+            url=settings.NEWS_URL,
+            auth=(settings.PHYSTECHJOB_USER, settings.PHYSTECHJOB_PWD),
+            json=data
+        )
+        print(settings.PHYSTECHJOB_USER, settings.PHYSTECHJOB_PWD)
+        print(resp.json())
+
+
+class NewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = News
+        fields = ('text', 'date', 'is_active')
