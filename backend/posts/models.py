@@ -65,7 +65,8 @@ class News(models.Model):
     is_active = models.BooleanField(verbose_name='Активно', default=True)
     text = RichTextField(verbose_name='Текст')
     date = models.DateTimeField('Дата создания', default=now)
-    raw_post = models.ForeignKey(to='RawPost', verbose_name='Сырой пост', on_delete=models.CASCADE)
+    raw_post = models.ForeignKey(to='RawPost', verbose_name='Сырой пост', on_delete=models.SET_NULL, null=True,
+                                 blank=True)
 
     class Meta:
         verbose_name = 'Новость'
