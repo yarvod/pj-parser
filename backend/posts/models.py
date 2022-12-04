@@ -112,5 +112,4 @@ class NewsSerializer(serializers.ModelSerializer):
 
     def get_text(self, obj):
         text = obj.text
-        text.replace('\n', '<br/>')
-        return text
+        return text.replace('\n', '<br/>')
