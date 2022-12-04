@@ -1,3 +1,5 @@
+import logging
+
 import requests
 from ckeditor.fields import RichTextField
 from django.conf import settings
@@ -7,6 +9,9 @@ from django.utils.timezone import now
 from rest_framework import serializers
 
 from posts.constants import MessageEntityTypes
+
+
+logger = logging.getLogger(__name__)
 
 
 class RawPost(models.Model):
@@ -91,6 +96,7 @@ class News(models.Model):
             auth=(settings.PHYSTECHJOB_USER, settings.PHYSTECHJOB_PWD),
             json=data
         )
+        logger.info(resp.status_code)
         if resp.status_code == '201':
             self.is_published = True
             self.publish_date = now()
