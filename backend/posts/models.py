@@ -97,7 +97,7 @@ class News(models.Model):
             json=data
         )
         logger.info(resp.status_code)
-        if resp.status_code == '201':
+        if resp.status_code == 201:
             self.is_published = True
             self.publish_date = now()
             self.save()
