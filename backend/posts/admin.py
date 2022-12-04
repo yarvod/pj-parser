@@ -44,7 +44,7 @@ class VacancyAdmin(admin.ModelAdmin):
 
 @admin.register(News)
 class NewsAdmin(admin.ModelAdmin):
-    list_display = ('short_text', 'date')
+    list_display = ('short_text', 'date', 'is_published', 'publish_date')
     actions = ('publish',)
 
     def short_text(self, obj):

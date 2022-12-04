@@ -70,8 +70,10 @@ class Vacancy(models.Model):
 
 class News(models.Model):
     is_active = models.BooleanField(verbose_name='Активно', default=True)
+    is_published = models.BooleanField(verbose_name='Опубликовано', default=False)
     text = models.TextField(verbose_name='Текст')
     date = models.DateTimeField('Дата создания', default=now)
+    publish_date = models.DateTimeField('Дата публикации', blank=True, null=True)
     raw_post = models.ForeignKey(to='RawPost', verbose_name='Сырой пост', on_delete=models.SET_NULL, null=True,
                                  blank=True)
 
@@ -89,8 +91,10 @@ class News(models.Model):
             auth=(settings.PHYSTECHJOB_USER, settings.PHYSTECHJOB_PWD),
             json=data
         )
-        print(settings.PHYSTECHJOB_USER, settings.PHYSTECHJOB_PWD)
-        print(resp.json())
+        if resp.status_code == '201':
+            self.is_published = True
+            self.publish_date = now()
+            self.save()
 
 
 class NewsSerializer(serializers.ModelSerializer):
