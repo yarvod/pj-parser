@@ -94,6 +94,13 @@ class News(models.Model):
 
 
 class NewsSerializer(serializers.ModelSerializer):
+    text = serializers.SerializerMethodField()
+
     class Meta:
         model = News
         fields = ('text', 'date', 'is_active')
+
+    def get_text(self, obj):
+        text = obj.text
+        text.replace('\n', '<br/>')
+        return text
