@@ -1,5 +1,6 @@
 from ckeditor.fields import RichTextField
 from django.db import models
+from django.template.defaultfilters import truncatechars
 from django.utils.timezone import now
 
 from posts.constants import MessageEntityTypes
@@ -13,6 +14,9 @@ class RawPost(models.Model):
     class Meta:
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
+
+    def __str__(self):
+        return truncatechars(self.text, 35)
 
 
 class MessageEntity(models.Model):
@@ -63,7 +67,7 @@ class Vacancy(models.Model):
 
 class News(models.Model):
     is_active = models.BooleanField(verbose_name='Активно', default=True)
-    text = RichTextField(verbose_name='Текст')
+    text = models.TextField(verbose_name='Текст')
     date = models.DateTimeField('Дата создания', default=now)
     raw_post = models.ForeignKey(to='RawPost', verbose_name='Сырой пост', on_delete=models.SET_NULL, null=True,
                                  blank=True)
@@ -71,3 +75,6 @@ class News(models.Model):
     class Meta:
         verbose_name = 'Новость'
         verbose_name_plural = 'Новости'
+
+    def __str__(self):
+        return truncatechars(self.text, 35)

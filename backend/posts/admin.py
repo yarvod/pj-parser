@@ -31,13 +31,13 @@ class RawPostAdmin(admin.ModelAdmin):
     short_text.short_description = 'Текст'
 
     @admin.action(description='Перевести в новость')
-    def publish(self, request, queryset):
+    def transfer2news(self, request, queryset):
         for post in queryset:
-            if isinstance(post, News):
-                News.objects.create(
-                    text=post.text,
-                    date=post.date,
-                )
+            News.objects.create(
+                text=post.text,
+                date=post.created,
+                raw_post=post
+            )
 
 
 @admin.register(Vacancy)
