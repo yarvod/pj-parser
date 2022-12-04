@@ -64,4 +64,3 @@ class NewsAdmin(admin.ModelAdmin):
                 auth=(settings.PHYSTECHJOB_USER, settings.PHYSTECHJOB_PWD),
                 json=data
             )
-
