@@ -109,7 +109,7 @@ class NewsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = News
-        fields = ('text', 'date', 'is_active')
+        fields = ('title', 'text', 'date', 'is_active')
 
     @staticmethod
     def get_title(obj):
