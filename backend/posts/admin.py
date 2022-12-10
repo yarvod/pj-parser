@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.template.defaultfilters import truncatechars
+from django.template.defaultfilters import truncatechars, truncatewords_html
 
 from posts.models import RawPost, Vacancy, MessageEntity, News
 
@@ -30,11 +30,11 @@ class RawPostAdmin(admin.ModelAdmin):
     @admin.action(description='Перевести в новость')
     def transfer2news(self, request, queryset):
         for post in queryset:
-            News.objects.create(
-                text=post.text,
+            news = News.objects.create(
                 date=post.created,
                 raw_post=post
             )
+            news.prettify()
 
 
 @admin.register(Vacancy)
@@ -48,7 +48,9 @@ class NewsAdmin(admin.ModelAdmin):
     actions = ('publish',)
 
     def short_text(self, obj):
-        return truncatechars(obj.text, 35)
+        if obj.text:
+            return truncatewords_html(obj.text, 10)
+        return f"{obj.id}"
 
     short_text.short_description = 'Текст'
 

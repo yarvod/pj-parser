@@ -9,6 +9,17 @@ logger = logging.getLogger(__name__)
 
 
 @app.task
+def transfer_to_news(raw_post_id):
+    raw_post = RawPost.objects.get(id=raw_post_id)
+    news = News.objects.create(
+        raw_post=raw_post,
+        is_active=True,
+    )
+    news.prettify()
+    news.publish()
+
+
+@app.task
 def process_message(channel_username: str, message: dict):
     logger.info("Start process message")
     active_chats = list(Channel.objects.filter(is_active=True).values_list('username', flat=True))
@@ -35,11 +46,7 @@ def process_message(channel_username: str, message: dict):
             url=entity['entity']['url']
         )
     if channel_username == 'fpmi_career':  # FIXME: потом нужно умнее определять новости
-        news = News.objects.create(
-            text=raw_post.text,
-            is_active=True,
-        )
-        news.publish()
+        transfer_to_news.apply_async(kwargs=dict(raw_post_id=raw_post.id))
     # process raw_post
     # vacancy = some_nlp_funcion(raw_post.text)
     # Vacancy.objects.create(**vacancy)

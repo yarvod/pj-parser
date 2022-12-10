@@ -4,7 +4,7 @@ import requests
 from ckeditor.fields import RichTextField
 from django.conf import settings
 from django.db import models
-from django.template.defaultfilters import truncatechars
+from django.template.defaultfilters import truncatechars, truncatewords_html
 from django.utils.timezone import now
 from rest_framework import serializers
 
@@ -76,7 +76,8 @@ class Vacancy(models.Model):
 class News(models.Model):
     is_active = models.BooleanField(verbose_name='Активно', default=True)
     is_published = models.BooleanField(verbose_name='Опубликовано', default=False)
-    text = models.TextField(verbose_name='Текст')
+    text = RichTextField(verbose_name='Текст', null=True)
+    preview_text = RichTextField(verbose_name='Текст превью', null=True)
     date = models.DateTimeField('Дата создания', default=now)
     publish_date = models.DateTimeField('Дата публикации', blank=True, null=True)
     raw_post = models.ForeignKey(to='RawPost', verbose_name='Сырой пост', on_delete=models.SET_NULL, null=True,
@@ -102,21 +103,35 @@ class News(models.Model):
             self.publish_date = now()
             self.save()
 
+    def prettify(self):
+        text = self.raw_post.text
+        entities = self.raw_post.messageentity_set.all()
+        text = text.replace('\n', '<br/>')
+        for entity in entities:
+            if entity.text.rstrip():
+                entity.text = entity.text.replace('\n', '<br/>')
+                if entity.type == MessageEntityTypes.BOLD:
+                    text = text.replace(entity.text, f"<b>{entity.text}<b/>")
+                if entity.type == MessageEntityTypes.ITALIC:
+                    text = text.replace(entity.text, f"<i>{entity.text}<i/>")
+                if entity.type == MessageEntityTypes.URL:
+                    text = text.replace(entity.text, f"<a href=\"{entity.text}\">{entity.text}</a>")
+                if entity.type == MessageEntityTypes.TEXT_URL:
+                    text = text.replace(entity.text, f"<a href=\"{entity.url}\">{entity.text}</a>")
+                if entity.type == MessageEntityTypes.MENTION:
+                    username = entity.text.replace('@', '')
+                    text = text.replace(entity.text, f"<a href=\"t.me/{username}\">{entity.text}</a>")
+                if entity.type == MessageEntityTypes.EMAIL:
+                    text = text.replace(entity.text, f"<a href=\"mailto: {entity.text}\">{entity.text}</a>")
+
+        self.preview_text = truncatewords_html(text, 30)
+        self.text = text
+        self.save()
+
 
 class NewsSerializer(serializers.ModelSerializer):
-    title = serializers.SerializerMethodField()
-    text = serializers.SerializerMethodField()
 
     class Meta:
         model = News
-        fields = ('title', 'text', 'date', 'is_active')
+        fields = ('preview_text', 'text', 'date', 'is_active')
 
-    @staticmethod
-    def get_title(obj):
-        text = obj.text
-        return text.split('\n')[0]
-
-    @staticmethod
-    def get_text(obj):
-        text = obj.text
-        return text.replace('\n', '<br/>')
